@@ -22,7 +22,11 @@ Before collecting real media, implement automatic deletion and confirm a retenti
 
 ## Stable URLs and hosting
 
-Storefront path: `/s/[store-slug]`, unique lowercase hyphenated slug assigned by the operator. Owners cannot mutate slugs. Preserve each assigned slug permanently when editing names; any future slug-change feature must preserve the old URL via an alias. The canonical public domain is pending. Do not print pilot QR codes with a temporary hostname. No public hosting has been provisioned.
+Storefront path: `/s/[store-slug]`, unique lowercase hyphenated slug assigned by the operator. A trigger rejects slug changes even from privileged operator updates; names remain editable without breaking links. `demo-shop` is reserved. Any future slug-change feature requires a migration and permanent aliases. The canonical public domain is pending. Do not print pilot QR codes with a temporary hostname. No public hosting has been provisioned.
+
+QR downloads use `qrcode` locally on the server, with a four-module quiet zone, medium error correction, and a 1024px PNG. The target comes solely from validated server-side `SITE_URL`, restricted to HTTPS origins (loopback HTTP allowed for local testing). The route does not accept arbitrary target URLs. Missing configuration fails closed; only public database-backed shops get downloads. A QR decode-and-open test verifies the generated asset independently via `jsqr`.
+
+Public reads use an anonymous Supabase client without session persistence or owner cookies. Fetches use `no-store`, a six-second timeout per query, and request-only memoization. Failures display a retry state; unknown/hidden shops return 404. Navigation uses inline loading feedback rather than a streamed route fallback to preserve correct 404 status codes. Shop details/offers are loaded on each request so withdrawals and expiry are reflected on subsequent visits. Dates display in `Asia/Kolkata`; the UI uses integer-paise prices from the database.
 
 ## Verification
 

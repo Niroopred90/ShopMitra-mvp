@@ -4,7 +4,7 @@
 
 Based on the October 2026 Technical & Field Execution Guide, especially sections 2, 7-8, 10-13. Repository inspection found only an empty `test` file; no application, dependencies, database, or automated checks exist yet.
 
-Progress: steps 2 and 3 are implemented and locally verified. Other steps remain planned. No public deployment, owner outreach, hosted account provisioning, or paid services have been performed.
+Progress: steps 2 and 3 are implemented and locally verified. Step 4's code and automated checks are complete; its physical Android scan and permanent-domain gate remain pending. Later steps remain planned. No public deployment, owner outreach, hosted account provisioning, or paid services have been performed.
 
 The guide places the main build in weeks 3-8 but also requests a live QR test on days 8-12 and a text-offer test by day 14. Reconcile these with a small vertical prototype during weeks 1-2, followed by hardening and the remaining features in weeks 3-8. Dates are relative to an agreed kickoff, not promised launch dates.
 
@@ -57,12 +57,14 @@ Exit: anonymous users can read only safe public data; owner A cannot read or cha
 
 ## 4. Prove the stable QR storefront (days 8-12)
 
-- [ ] Build `/s/[store-slug]` with shop details, current offers, directions, and sharing.
-- [ ] Generate downloadable/printable QR codes for the chosen canonical storefront URLs.
-- [ ] Preserve QR destinations through shop-name changes; enforce slug uniqueness and the chosen alias policy.
-- [ ] Add loading, unavailable-shop, empty-offer, and network-error states.
-- [ ] Filter public offers by publication, validity, and moderation eligibility on the server.
+- [x] Build `/s/[store-slug]` with shop details, current offers, directions, and sharing.
+- [x] Generate downloadable/printable QR codes for configured canonical storefront URLs (local test origin only so far).
+- [x] Preserve QR destinations through shop-name changes; enforce slug uniqueness and immutable slugs.
+- [x] Add navigation loading feedback, unavailable-shop, empty-offer, and network-error/retry states.
+- [x] Filter public offers by publication, validity, and moderation eligibility on the server.
 - [ ] Use a review/test environment first; choose a stable public host before printing pilot QR codes.
+
+Validation: 40 transactional database checks, 11 mobile Chromium tests, lint, type checks, and production build passed locally. The downloaded PNG is independently decoded in tests and its destination opens the correct public shop without login. Name changes preserve the slug; attempts to change it are rejected. No cross-request storefront cache is used. Physical Android scan, weak-network field checks, and a permanent hosted origin have not been verified. Do not print localhost codes for customers.
 
 Exit: scanning a physical sample QR on Android opens the intended shop without login; draft, expired, withdrawn, and hidden offers remain inaccessible publicly.
 
@@ -130,4 +132,4 @@ Exit: a written continue/change/stop decision backed by field evidence. Expansio
 
 ## Recommended first implementation ticket
 
-Next is step 4: connect public storefronts to the safe database views and generate stable QR links. Use the documented login, manual ownership verification, and expiry decisions; the canonical hosting domain remains pending. Then complete owner-approved text offers before introducing AI.
+Next development ticket is step 5: owner-approved text offers. Step 4's code is tested locally; keep its physical Android scan and permanent public origin as open release prerequisites. Complete the core owner-to-customer update journey before introducing AI.

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ShopLink } from "@/components/shop-link";
 
 export default function HomePage() {
   return (
@@ -8,7 +9,7 @@ export default function HomePage() {
         <h1 className="max-w-xl text-5xl font-extrabold leading-tight tracking-tight md:text-6xl">Your local shop.<br />One simple link.</h1>
         <p className="mt-6 max-w-lg text-lg leading-relaxed text-stone-600">Scan a QR. Visit your shop’s page. See what’s on offer, straight from the owner. No app or customer login needed.</p>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/s/demo-shop" className="rounded-xl bg-emerald-900 px-6 py-4 font-semibold text-white">Explore the demo shop →</Link>
+          <ShopLink href="/s/demo-shop" className="rounded-xl bg-emerald-900 px-6 py-4 font-semibold text-white">Explore the demo shop →</ShopLink>
           <Link href="/owner" className="rounded-xl border border-stone-300 bg-white px-6 py-4 font-semibold">I’m a shop owner</Link>
         </div>
       </section>

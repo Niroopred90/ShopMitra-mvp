@@ -18,12 +18,26 @@ Open http://127.0.0.1:3000. No environment variables or hosted services are need
 Routes:
 
 - `/`: introduction and navigation.
-- `/s/demo-shop`: explicitly fictional storefront, with no live offers. Other shop slugs return 404.
+- `/s/demo-shop`: explicitly fictional preview, with no live offers.
+- `/s/[store-slug]`: public database-backed storefront, current offers, sharing, and directions when an address exists. Hidden/unknown shops return 404; backend failures show a retry state.
+- `/s/[store-slug]/qr`: downloadable 1024px PNG QR for an available public shop, using the configured canonical origin.
 - `/owner/login`: email/password sign-in for provisioned pilot accounts.
 - `/owner`: authenticated list of the user's verified shops and sign-out.
 - `/admin`: verified admin gate; moderation tools are not implemented yet.
 
-Shop provisioning is operator-only. Database authorization and owner login are implemented; real public storefront reads, QR generation, offer publishing, and AI remain pending. Login requires local Supabase settings; the home/demo pages still work without them.
+Shop provisioning is operator-only. Public storefront reads, QR generation, database authorization, and owner login are implemented. Offer publishing and AI remain pending. Login and database-backed pages require Supabase settings; home/demo pages still work without them.
+
+Open `/s/fixture-shop-a` on the seeded local stack to see a database-backed shop and its published offer. `/s/fixture-shop-b` is intentionally hidden. Local fixtures are fictional.
+
+## Storefront links and QR codes
+
+Set server-only `SITE_URL` in `.env.local` to your canonical **HTTPS origin**, with no path, query, credentials, or fragment. The local setup script uses `http://127.0.0.1:3000`; HTTP is allowed only for loopback development. Existing `.env.local` files from step 3 need that setting added manually. Restart/rebuild after configuration changes.
+
+The public shop page offers a PNG download; owners can reach it through “View storefront and QR” in their dashboard. QR destinations always come from `SITE_URL`, never incoming Host headers or query parameters. Missing/invalid `SITE_URL` disables QR downloads with a 503 response; hidden/unknown/demo shops return 404 for downloads. Sharing falls back to the current page URL if no canonical origin is configured.
+
+Localhost QR codes are only test artifacts: they point to the scanning device's own loopback address. Choose the permanent domain and a review deployment before printing customer-facing QR codes. Physical Android scanning, real network/device checks, and hosting remain pending.
+
+Storefront pages use fresh anonymous reads from safe public views, never the signed-in owner's session. Drafts, future/expired/withdrawn offers, moderated content, and private source data are excluded by the database. Shop slugs are immutable even to normal operator updates; name changes retain printed URLs. The demo slug is reserved. A backend timeout shows a retry state instead of presenting an error as “no offers.”
 
 The initial development session used a temporary Node 22 runtime because the machine had Node 18. While that temporary runtime remains available, a session-local alternative is:
 
@@ -81,4 +95,4 @@ Local setup follows the [Supabase CLI documentation](https://supabase.com/docs/g
 
 ## Next milestone
 
-See `AGENTS.md` for project rules, `IMPLEMENTATION_PLAN.md` for the checklist, and `docs/architecture-decisions.md` for access/provisioning decisions. Next: real public storefront reads and stable QR generation, then owner-approved text offers.
+See `AGENTS.md` for project rules, `IMPLEMENTATION_PLAN.md` for the checklist, and `docs/architecture-decisions.md` for access/provisioning decisions. Next: owner-approved text offers. Step 4's physical scan and permanent-domain gate remain pending.
