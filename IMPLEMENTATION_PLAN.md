@@ -4,7 +4,7 @@
 
 Based on the October 2026 Technical & Field Execution Guide, especially sections 2, 7-8, 10-13. Repository inspection found only an empty `test` file; no application, dependencies, database, or automated checks exist yet.
 
-Progress: step 2 is implemented and locally verified. Other steps remain planned. No public deployment, owner outreach, hosted account provisioning, or paid services have been performed.
+Progress: steps 2 and 3 are implemented and locally verified. Other steps remain planned. No public deployment, owner outreach, hosted account provisioning, or paid services have been performed.
 
 The guide places the main build in weeks 3-8 but also requests a live QR test on days 8-12 and a text-offer test by day 14. Reconcile these with a small vertical prototype during weeks 1-2, followed by hardening and the remaining features in weeks 3-8. Dates are relative to an agreed kickoff, not promised launch dates.
 
@@ -43,13 +43,15 @@ Exit: a clean checkout can run locally; configured checks and a production build
 
 ## 3. Implement schema, ownership, and isolation (days 5-8)
 
-- [ ] Create migrations for shops, shop memberships/roles, offers, and restricted audit history.
-- [ ] Define offer fields: shop, title/description, price/currency, quantity/unit, validity, status, source type, approval metadata, timestamps.
-- [ ] Use explicit decimal or integer-minor-unit money handling; define precision and valid ranges.
-- [ ] Define publication and moderation states plus timezone/expiry behavior. Proposed default: date-only end dates expire at the next local midnight in `Asia/Kolkata`, stored as an exclusive UTC boundary.
-- [ ] Implement Supabase Auth and server-side membership checks; choose a documented verification process for the first five shops.
-- [ ] Add RLS, public safe views/queries, private storage policies, foreign keys, and appropriate indexes.
-- [ ] Prepare synthetic seed shops and accounts without real owner contact details.
+- [x] Create migrations for shops, shop memberships/roles, offers, and restricted audit history.
+- [x] Define offer fields: shop, title/description, price/currency, quantity/unit, validity, status, source type, approval metadata, timestamps.
+- [x] Use explicit decimal or integer-minor-unit money handling; define precision and valid ranges.
+- [x] Define publication and moderation states plus timezone/expiry behavior. Date-only end dates will expire at the next local midnight in `Asia/Kolkata`, stored as an exclusive UTC boundary.
+- [x] Implement Supabase Auth and server-side membership checks; choose a documented verification process for the first five shops.
+- [x] Add RLS, public safe views/queries, private storage policies, foreign keys, and appropriate indexes.
+- [x] Prepare synthetic seed shops and accounts without real owner contact details.
+
+Validation: migration/reset, 29 transactional database security checks, lint, type checks, production build, and 7 mobile Chromium tests passed locally. Tests cover public offer filtering, cross-shop read/write denial, private media, blocked direct publication, viewer restrictions, owner login/logout, unassigned users, and admin access. Hosted auth settings and real owner onboarding remain operational work; the documented manual verification flow has not been performed on real shops.
 
 Exit: anonymous users can read only safe public data; owner A cannot read or change owner B's private data, including through direct database/storage calls; unauthorized admin access fails.
 
@@ -128,4 +130,4 @@ Exit: a written continue/change/stop decision backed by field evidence. Expansio
 
 ## Recommended first implementation ticket
 
-Start with step 2: scaffold the application, document local setup, and pass lint/type/build plus a browser smoke test. Then implement steps 3-5 as one narrow product journey before introducing AI. Resolve login, ownership, slug/domain, and expiry choices before they become dependencies; record remaining field decisions without blocking unrelated local setup.
+Next is step 4: connect public storefronts to the safe database views and generate stable QR links. Use the documented login, manual ownership verification, and expiry decisions; the canonical hosting domain remains pending. Then complete owner-approved text offers before introducing AI.

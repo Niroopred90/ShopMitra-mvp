@@ -1,6 +1,6 @@
 # ShopMitra
 
-Mobile-first digital storefronts for neighborhood shops. Initial scaffold: Next.js App Router, TypeScript, Tailwind CSS, ESLint, and Playwright.
+Mobile-first digital storefronts for neighborhood shops. Next.js App Router, TypeScript, Tailwind CSS, Supabase Auth/PostgreSQL, ESLint, and Playwright.
 
 ## Run locally
 
@@ -19,10 +19,11 @@ Routes:
 
 - `/`: introduction and navigation.
 - `/s/demo-shop`: explicitly fictional storefront, with no live offers. Other shop slugs return 404.
-- `/owner`: owner preview; no authentication or publishing yet.
-- `/admin`: static placeholder only; no administrative data or actions.
+- `/owner/login`: email/password sign-in for provisioned pilot accounts.
+- `/owner`: authenticated list of the user's verified shops and sign-out.
+- `/admin`: verified admin gate; moderation tools are not implemented yet.
 
-These pages do not implement shop onboarding, QR generation, authorization, database reads, or AI. Do not add private information to the public owner/admin placeholders. Add server authorization before introducing protected content.
+Shop provisioning is operator-only. Database authorization and owner login are implemented; real public storefront reads, QR generation, offer publishing, and AI remain pending. Login requires local Supabase settings; the home/demo pages still work without them.
 
 The initial development session used a temporary Node 22 runtime because the machine had Node 18. While that temporary runtime remains available, a session-local alternative is:
 
@@ -47,7 +48,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Browser tests start the production server themselves; build first and keep port 3000 free. CI runs the same checks on Node 22 and installs Chromium with Linux dependencies. Tests use a mobile Chromium viewport; they do not substitute for physical Android or weak-network testing.
+Browser tests start the production server themselves; build first and keep port 3000 free. With local Supabase configured, run `npm run test:db` and `TEST_LOCAL_AUTH=1 npm run test:e2e` for database/auth coverage. CI starts local Supabase, runs the database tests, and enables auth browser tests. Tests use a mobile Chromium viewport; they do not substitute for physical Android or weak-network testing.
 
 For the temporary browser installation used in the initial session:
 
@@ -59,17 +60,18 @@ Dependencies are pinned and `package-lock.json` is committed with the source. ES
 
 ## Supabase local/test setup
 
-The CLI is pinned as a development dependency and `supabase/config.toml` is initialized. Local database/auth integration is the next milestone. The stack has not been started or validated in this scaffold.
+The CLI is pinned as a development dependency. Schema, RLS, storage policies, private source data, and trigger-written audit history are versioned in `supabase/migrations/`. The local stack and isolation tests have been validated.
 
 Prerequisites: Node 22 and a running Docker-compatible container engine. The initial start downloads container images and consumes local disk/memory.
 
 ```sh
 npx supabase start
-npx supabase status
-cp .env.example .env.local
+npm run setup:local-env
 ```
 
-Copy the local API URL and publishable key from status into `.env.local`. Never put a service-role/secret key in a `NEXT_PUBLIC_` variable. The UI does not consume these variables yet. Local Studio is normally at http://127.0.0.1:54323; API at http://127.0.0.1:54321.
+The setup script writes only the local public API URL/key to ignored `.env.local` and refuses to overwrite an existing file. Never put a service-role/secret key in a `NEXT_PUBLIC_` variable. Local Studio is normally at http://127.0.0.1:54323; API at http://127.0.0.1:54321.
+
+After a new local stack is initialized, fictional seed accounts are available: `owner-a@example.test`, `owner-b@example.test`, `viewer@example.test`, `admin@example.test`, and `unassigned@example.test`. Their local-only password is `ShopMitra-local-2026!`. Owner A is assigned Fixture Shop A; owner B is assigned Fixture Shop B; viewer can read A; unassigned has no shop access. Never apply these seeds to a hosted/production database. Existing local stacks need a deliberate local reset to apply new seeds/migrations; this destroys local data.
 
 Use a separate local project/test database and synthetic records for integration tests. Never reset a production or shared database. Once migrations exist, `npx supabase db reset` rebuilds the **local** database and destroys its existing local data. Stop services with `npx supabase stop`.
 
@@ -79,4 +81,4 @@ Local setup follows the [Supabase CLI documentation](https://supabase.com/docs/g
 
 ## Next milestone
 
-See `AGENTS.md` for project rules and `IMPLEMENTATION_PLAN.md` for the staged checklist. Next: schema, ownership verification, authentication, and row-level security, followed by real storefronts and owner-approved text offers.
+See `AGENTS.md` for project rules, `IMPLEMENTATION_PLAN.md` for the checklist, and `docs/architecture-decisions.md` for access/provisioning decisions. Next: real public storefront reads and stable QR generation, then owner-approved text offers.

@@ -5,7 +5,7 @@ permissions:
 jobs:
   checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     env:
       NEXT_TELEMETRY_DISABLED: "1"
     steps:
@@ -15,11 +15,16 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - run: npx supabase start
+      - run: npm run setup:local-env
+      - run: npm run test:db
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+        env:
+          TEST_LOCAL_AUTH: "1"
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
