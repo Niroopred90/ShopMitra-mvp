@@ -68,6 +68,8 @@ Read `IMPLEMENTATION_PLAN.md` before starting a milestone. The initial Next.js s
 
 ## Working conventions
 
+- Use `dev` as the default development branch. Run checks on `dev` before promoting changes through a pull request from `dev` to `main`.
+- Keep `main` for tested releases. Require the `checks` CI job on the promotion pull request; do not push development changes directly to `main` or bypass failed checks.
 - Keep changes focused on the assigned milestone and preserve unrelated user work.
 - Add schema changes through migrations; include constraints, indexes, RLS policies, and storage policies with the relevant feature.
 - Document actual setup, commands, and environment variables in `README.md` as they are introduced. Do not claim commands work before running them.

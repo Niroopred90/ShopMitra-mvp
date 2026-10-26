@@ -33,7 +33,11 @@ npm run dev
 
 Install/use Node 22 normally for ongoing development; temporary directories are not durable.
 
-## Checks
+## Branch workflow
+
+`dev` is the default development branch. Push development changes to `dev` and let the Application checks workflow pass. Promote tested work with a pull request whose base is `main` and head is `dev`; merge only after the PR's `checks` job passes. Keep `main` for tested releases and avoid direct pushes. CI runs on both pushes and pull requests; merging to `main` is a deliberate release action, not automatic deployment.
+
+## Validation commands
 
 ```sh
 npm run lint
