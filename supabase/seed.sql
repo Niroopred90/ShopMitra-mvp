@@ -1,0 +1,2 @@
+-- Synthetic pilot fixtures will be added with the schema in milestone 3.
+-- Do not add real owner contacts or production data here.
