@@ -193,14 +193,14 @@ isOneToOne: false
                   ]
                 },"shops": {
                   Row: {
-                    "address": string,"category": string,"created_at": string,"description": string,"id": string,"location": unknown,"name": string,"neighborhood": string,"slug": string,"visibility": string
+                    "address": string,"category": string,"created_at": string,"description": string,"id": string,"location": unknown,"name": string,"neighborhood": string,"profile_version": number,"slug": string,"visibility": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "address"?: string,"category": string,"created_at"?: string,"description"?: string,"id"?: string,"location"?: unknown,"name": string,"neighborhood": string,"slug": string,"visibility"?: string
+                    "address"?: string,"category": string,"created_at"?: string,"description"?: string,"id"?: string,"location"?: unknown,"name": string,"neighborhood": string,"profile_version"?: number,"slug": string,"visibility"?: string
                   }
                   Update: {
-                    "address"?: string,"category"?: string,"created_at"?: string,"description"?: string,"id"?: string,"location"?: unknown,"name"?: string,"neighborhood"?: string,"slug"?: string,"visibility"?: string
+                    "address"?: string,"category"?: string,"created_at"?: string,"description"?: string,"id"?: string,"location"?: unknown,"name"?: string,"neighborhood"?: string,"profile_version"?: number,"slug"?: string,"visibility"?: string
                   }
                   Relationships: [
                     
@@ -245,7 +245,15 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "begin_ai_request":
+            "admin_save_shop":
+{ Args: { "p_expected_version": number,"p_owner_lookup"?: string,"p_payload": Json,"p_request_id"?: string,"p_shop_id": string,"p_verification_method"?: string,"p_verified"?: boolean }; Returns: string
+                           },
+"admin_shop_details":
+{ Args: { "p_shop_id": string }; Returns: {
+              "address": string,"category": string,"description": string,"id": string,"latitude": number,"longitude": number,"name": string,"neighborhood": string,"profile_version": number,"slug": string,"visibility": string
+            }[]
+                           },
+"begin_ai_request":
 { Args: { "p_offer_id": string,"p_request_id": string,"p_shop_id": string }; Returns: string
                            },
 "complete_ai_draft":

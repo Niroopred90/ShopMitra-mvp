@@ -15,6 +15,14 @@ npm run dev
 
 Open http://127.0.0.1:3000. No environment variables or hosted services are needed for the initial preview.
 
+For the complete **local-only** app, start Docker and use Node 22:
+
+```sh
+npm run dev:local
+```
+
+This starts local Supabase, applies pending migrations without resetting data, adds missing local settings, and opens the development server at http://127.0.0.1:3000. It explicitly forces local database credentials and disables live AI calls for that process, even if provider keys exist in your shell or `.env.local`. It creates no hosted projects and sends no invitations. Supabase remains running after you stop the app; use `npx supabase stop` when finished. Private setup diagnostics are saved in ignored `.local-runtime/` if startup fails.
+
 Routes:
 
 - `/`: introduction and navigation.
@@ -28,9 +36,13 @@ Routes:
 - `/nearby`: nearby shops by explicit geolocation or selected neighborhood.
 - `/report/[offer-id]`: fixed-choice report form for eligible public offers.
 - `/admin`: restricted moderation, report triage, and aggregate daily page displays.
+- `/admin/shops/new`: admin shop setup and independently verified access for an existing account.
+- `/admin/shops/[shopId]`: edit shop details/coordinates and add verified owner access; the slug stays fixed.
 - `/api/health`: minimal dependency-health endpoint.
 
 Shop provisioning is operator-only. The core owner-to-customer publication flow, public storefronts/QRs, AI adapters, discovery, reporting, and moderation are implemented. Login and database-backed pages require Supabase settings; home/demo pages still work without them. AI remains disabled until compatible models and a provider key are explicitly configured. No public deployment or real-shop pilot has taken place.
+
+For local setup, sign in as `admin@example.test`, open `/admin`, and choose **Set up a verified shop**. Use an existing local account's exact email or UUID, complete the verification fields, and create a hidden shop while checking its details. The setup flow creates no Auth account and sends no invitations or email. In synthetic demos, use fictional business details and the seeded accounts; for real businesses, independently confirm authorization/consent before assigning access. Existing owner memberships are retained when another verified owner is added.
 
 Open `/s/fixture-shop-a` on the seeded local stack to see a database-backed shop and its published offer. `/s/fixture-shop-b` is intentionally hidden. Local fixtures are fictional.
 
@@ -71,7 +83,7 @@ npm run test:e2e
 
 Browser tests start the production server themselves; build first and keep port 3000 free. With local Supabase configured, run `npm run test:db` and `TEST_LOCAL_AUTH=1 npm run test:e2e` for database/auth coverage. CI starts local Supabase, runs the database tests, and enables auth browser tests. Tests use a mobile Chromium viewport; they do not substitute for physical Android or weak-network testing.
 
-Latest integrated local result: 123 database assertions and 30 app/browser/adapter cases passed, plus actual synthetic-source deletion and a database restore rehearsal covering core grants/RLS. `test:retention` requires the seeded local stack and server-only local settings; it refuses hosted URLs. AI tests use offline mocks rather than paid provider calls.
+Latest local result: 151 database assertions passed; app coverage is now 35 browser/adapter/validation cases. The combined run passed 34 cases, and the final focused admin suite passed all 3 cases after correcting asynchronous test cleanup. Lint, strict type checks, and the production build passed. Earlier verification also covered synthetic-source deletion and restore grants/RLS. `test:retention` requires the seeded local stack and server-only local settings; it refuses hosted URLs. AI tests use offline mocks rather than paid provider calls.
 
 For the temporary browser installation used in the initial session:
 

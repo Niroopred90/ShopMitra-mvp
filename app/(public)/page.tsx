@@ -20,7 +20,7 @@ export default function HomePage() {
           <li><strong className="text-lg">02 · Offers you control</strong><p className="mt-1 text-stone-600">Review the details before anything is published.</p></li>
           <li><strong className="text-lg">03 · Connected to your neighborhood</strong><p className="mt-1 text-stone-600">Built for the shops around the corner.</p></li>
         </ol>
-        <p className="mt-8 border-t border-emerald-900/10 pt-5 text-sm text-stone-600">Early preview. Shop setup and publishing are coming next.</p>
+        <p className="mt-8 border-t border-emerald-900/10 pt-5 text-sm text-stone-600">Local pilot preview. Verified owners can create drafts, review every detail, and publish offers.</p>
       </aside>
     </div>
   );

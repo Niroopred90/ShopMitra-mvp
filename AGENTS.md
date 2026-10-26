@@ -68,6 +68,7 @@ Read `IMPLEMENTATION_PLAN.md` before starting a milestone. Owner-approved publis
 
 ## Working conventions
 
+- Current user preference: keep development entirely local. Use `npm run dev:local` for the local stack with live AI disabled. Do not configure hosting, send invitations, run paid provider calls, or enable scheduled hosted jobs without a new user instruction.
 - Use `dev` as the default development branch. Run checks on `dev` before promoting changes through a pull request from `dev` to `main`.
 - Keep `main` for tested releases. Require the `checks` CI job on the promotion pull request; do not push development changes directly to `main` or bypass failed checks.
 - Keep changes focused on the assigned milestone and preserve unrelated user work.
@@ -84,3 +85,13 @@ Read `IMPLEMENTATION_PLAN.md` before starting a milestone. Owner-approved publis
 - The guide calls for separate written agreement on assignments, access, compensation, IP, data access, and decision rights before collaborator contributions. Record this as a human prerequisite; do not invent agreements or treat the PDF as authorization.
 - Do not promise sales, launch dates, lifetime free use, prices, equity, or partnership rights.
 - Treat pilot metrics as hypotheses, not guarantees. Expand only after reviewing field evidence.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

@@ -2,6 +2,10 @@
 
 ## Basis and current state
 
+Current scope: the user explicitly chose **keep everything local for now**. Hosting, paid/live AI testing, public QR printing, and actual field operations are deferred. Local admin shop setup and network/session resilience checks are included in the current implementation; they do not establish real-shop consent or physical-device verification.
+
+Local-only follow-up: admin shop setup/editing now replaces direct SQL for normal shop provisioning, and `npm run dev:local` starts the local stack with live AI explicitly disabled. Migration 007 was applied without resetting existing data. All 151 database checks passed. App coverage grew to 35 cases: 34 passed in the combined run, then all 3 admin setup cases passed in a focused rerun after fixing test cleanup to wait for the saved version. Delayed/retransmitted saves and interrupted-session recovery passed. Lint, strict types, and production build passed. The user still handles commits manually.
+
 Based on the October 2026 Technical & Field Execution Guide, especially sections 2, 7-8, 10-13. Repository inspection found only an empty `test` file; no application, dependencies, database, or automated checks exist yet.
 
 Progress: the software for steps 2–8 is implemented, with local verification recorded below. Release/pilot materials and a local recovery rehearsal support steps 1, 9, and 10. Field activities, real AI/provider quality checks, hosted operations, physical Android/weak-network verification, and the actual five-shop pilot remain open. No public deployment, owner outreach, hosted account provisioning, paid AI calls, commits, or pushes were performed during the fan-out implementation.
@@ -94,7 +98,8 @@ Exit: an authorized owner can publish/edit a text offer and a customer sees the 
 
 - [x] Add database-backed write/upload/request limits, server validation, labeled forms, helpful failures, browser security headers, and fixed-field operational logs/health checks. Hosted alerting remains unconfigured.
 - [x] Complete integration/browser tests for auth, tenant isolation, offer lifecycle, exact expiry boundaries, freshness, and QR routing.
-- [ ] Test low-cost Android devices, slow connections, refresh/retry, and interrupted sessions.
+- [x] Add automated simulated delayed-response/retransmission and interrupted-session checks for local owner publishing. Real low-cost Android/weak-network field tests remain pending.
+- [ ] Test actual low-cost Android devices and real weak/interrupted networks.
 - [ ] Fix issues observed in interviews and screen reviews before adding AI complexity.
 
 Exit: core checks pass in CI, critical security defects are resolved, and field users can complete the text journey reliably.
