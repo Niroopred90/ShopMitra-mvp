@@ -107,6 +107,7 @@ Exit: core checks pass in CI, critical security defects are resolved, and field 
 ## 7. Add AI-assisted drafts incrementally (weeks 5-6)
 
 - [x] Define a structured extraction schema and real server-side provider adapter, with offline request/response tests.
+- [x] Add standalone `npm run test:ai`: 19 offline checks, including English/Hindi/Telugu fixtures, malformed/injected output, decimal precision, and independent review warnings. This validates adapter/validator behavior; it does not measure real model accuracy.
 - [x] Add private photo uploads, content/type/signature/size checks, and image-extraction adapter.
 - [x] Add phone capture/upload and transcription/extraction adapters with Telugu/Hindi/English language selection.
 - [ ] Validate actual provider output on consented Telugu, Hindi, and English samples; no real quality or cost claim is supported yet.

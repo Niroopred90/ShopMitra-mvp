@@ -120,6 +120,8 @@ Sign in as owner A, choose **Manage offers**, and create a text offer. Saving pr
 
 ## Optional AI configuration
 
+Run `npm run test:ai` for **offline AI validation** without an app server, database, browser installation, API key, or paid calls. Its 19 cases cover malformed/injected output, price/quantity precision, missing/expired/conflicting dates, media types, provider failures, and English/Hindi/Telugu Unicode fixtures. Validation trims blank fields and adds review warnings independently of model-supplied warnings. Fixtures mock model outputs: passing them does not establish actual extraction accuracy, translation quality, or source-grounded prices. Live multilingual evaluation remains pending.
+
 Set server-only `OPENAI_API_KEY` and an explicit `OPENAI_OFFER_MODEL` supporting image input and structured Responses output. Set `OPENAI_TRANSCRIPTION_MODEL` separately for voice. There are no default models or automatic live calls. Review current official provider compatibility and pricing before configuring them. Owners must consent to sending the input to the provider, and must separately review/approve every generated draft.
 
 Uploads are limited to 2 MB, validated by media signatures, and stored in private shop-scoped paths. Processing uses timeouts, database request budgets, and manual-entry fallback. Source text/media is hidden after 30 days; physical deletion requires the cleanup job. Actual provider quality, cost, and representative Telugu/Hindi/English samples are unverified. Never claim the offline adapter tests establish multilingual accuracy.

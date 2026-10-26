@@ -4,6 +4,7 @@ import { loadStorefront, storefrontUrl } from "@/lib/storefront";
 import { ShareShop } from "@/components/share-shop";
 import { StorefrontUnavailable } from "@/components/storefront-unavailable";
 import Link from "next/link";
+import { SmallIcon } from "@/components/brand-art";
 import { RecordShopView } from "@/components/record-shop-view";
 
 type Props = { params: Promise<{ "store-slug": string }> };
@@ -36,11 +37,12 @@ export default async function StorefrontPage({ params }: Props) {
     <article className="mx-auto max-w-2xl break-words">
       {!demo && <RecordShopView shopId={shop.id} />}
       {demo && <p className="mb-5 inline-block rounded-full bg-orange-100 px-4 py-2 text-sm font-semibold text-orange-900">Demo only · Not a real business</p>}
-      <section className="rounded-3xl bg-emerald-900 p-8 text-white md:p-12">
-        <p className="text-sm font-semibold uppercase tracking-widest text-emerald-100">{shop.category} · {shop.neighborhood}</p>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight">{shop.name}</h1>
-        {shop.description && <p className="mt-4 whitespace-pre-line leading-relaxed text-emerald-50">{shop.description}</p>}
-        {shop.address && <p className="mt-5 text-sm text-emerald-100">{shop.address}</p>}
+      <section className="shop-hero">
+        <div className="shop-avatar"><SmallIcon kind="bag" /></div>
+        <p className="page-eyebrow">{shop.category} · {shop.neighborhood}</p>
+        <h1 className="mt-3">{shop.name}</h1>
+        {shop.description && <p className="mt-4 whitespace-pre-line text-sm leading-relaxed">{shop.description}</p>}
+        {shop.address && <p className="mt-5 text-sm">{shop.address}</p>}
       </section>
       <div className="mt-6 flex flex-wrap items-start gap-4">
         {directions && <a href={directions} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-emerald-900 px-5 py-3 font-semibold text-white">Get directions</a>}
@@ -48,13 +50,14 @@ export default async function StorefrontPage({ params }: Props) {
       </div>
       <section className="mt-10" aria-labelledby="offers-heading">
         <h2 id="offers-heading" className="text-2xl font-bold">Current offers</h2>
-        {offers.length ? <ul className="mt-4 space-y-4">{offers.map(offer => <li key={offer.id} className="rounded-2xl border border-stone-200 bg-white p-6">
+        {offers.length ? <ul className="mt-4 space-y-4">{offers.map(offer => <li key={offer.id} className="shop-offer">
           <h3 className="text-xl font-bold">{offer.title}</h3>
           {offer.description && <p className="mt-3 whitespace-pre-line text-stone-600">{offer.description}</p>}
           {offer.price_minor !== null && <p className="mt-4 text-2xl font-bold text-emerald-900">{money.format(offer.price_minor / 100)}{offer.quantity !== null && offer.unit && <span className="ml-2 text-sm font-normal text-stone-600">for {offer.quantity} {offer.unit}</span>}</p>}
           {offer.expires_at && <p className="mt-4 text-sm text-stone-600">Ends <time dateTime={offer.expires_at}>{dates.format(new Date(offer.expires_at))}</time></p>}
           <Link href={`/report/${offer.id}`} className="mt-4 inline-block text-sm text-stone-600 underline">Report this offer</Link>
-        </li>)}</ul> : <div className="mt-4 rounded-2xl border border-dashed border-stone-300 bg-white p-8">
+        </li>)}</ul> : <div className="shop-empty mt-5">
+          <span className="shop-empty-icon"><SmallIcon kind="bag" /></span>
           <p className="font-semibold">No offers yet</p>
           <p className="mt-2 text-stone-600">{demo ? "Published offers will appear here. This preview has no live shop data." : "There are no current offers. Check back for updates from the shop."}</p>
         </div>}

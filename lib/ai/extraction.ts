@@ -18,24 +18,27 @@ export const extractionSchema = {
 export function validDate(value: unknown): value is string {
   if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const date = new Date(`${value}T00:00:00Z`);
-  return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
+  return value.slice(0, 4) !== "0000" && !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
 }
 
-export function parseExtraction(value: unknown): ExtractedOffer {
+export function parseExtraction(value: unknown, today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date())): ExtractedOffer {
+  if (!validDate(today)) throw new Error("Invalid validation date");
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Invalid AI response");
   const data = value as Record<string, unknown>;
   if (Object.keys(data).some(key => !extractionSchema.required.includes(key)) || extractionSchema.required.some(key => !(key in data))) throw new Error("Invalid AI response");
   const nullableText = (v: unknown, max: number) => v === null || (typeof v === "string" && v.length > 0 && v.length <= max);
   if (!nullableText(data.title, 160) || typeof data.description !== "string" || data.description.length > 3000
     || !(data.price_minor === null || (Number.isInteger(data.price_minor) && Number(data.price_minor) >= 0 && Number(data.price_minor) <= 100000000))
-    || !(data.quantity === null || (typeof data.quantity === "number" && Number.isFinite(data.quantity) && data.quantity > 0 && data.quantity <= 1000000 && Number.isInteger(data.quantity * 1000)))
+    || !(data.quantity === null || (typeof data.quantity === "number" && Number.isFinite(data.quantity) && data.quantity > 0 && data.quantity <= 1000000 && /^\d+(\.\d{1,3})?$/.test(String(data.quantity))))
     || !nullableText(data.unit, 40) || !(data.starts_on === null || validDate(data.starts_on)) || !(data.expires_on === null || validDate(data.expires_on))
     || !Array.isArray(data.warnings) || data.warnings.length > 10 || data.warnings.some(w => typeof w !== "string" || w.length > 300)) throw new Error("Invalid AI response");
-  const result = data as ExtractedOffer;
-  const warnings = new Set(result.warnings);
+  const parsed = data as ExtractedOffer;
+  const result = { ...parsed, title: parsed.title?.trim() || null, description: parsed.description.trim(), unit: parsed.unit?.trim() || null };
+  const warnings = new Set(result.warnings.map(warning => warning.trim()).filter(Boolean));
   if (!result.title?.trim()) warnings.add("Check the offer title.");
   if (result.price_minor === null) warnings.add("Price is missing or ambiguous. Enter it manually.");
   if (!result.expires_on) warnings.add("An end date is required before publishing.");
+  if (result.expires_on && result.expires_on < today) warnings.add("This offer has already expired. Correct its end date before publishing.");
   if ((result.quantity === null) !== (result.unit === null)) warnings.add("Check quantity and unit together.");
   if (result.starts_on && result.expires_on && result.starts_on > result.expires_on) warnings.add("Validity dates need correction.");
   warnings.add("Verify all prices, quantities, and dates against the original input before publishing.");

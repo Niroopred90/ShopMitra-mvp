@@ -1,3 +1,4 @@
+import { NeighborhoodArt, SmallIcon } from "@/components/brand-art";
 import { supabaseConfig } from "@/lib/supabase/config";
 import { signIn } from "./actions";
 
@@ -8,9 +9,10 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const { error } = await searchParams;
   const configured = Boolean(supabaseConfig());
   return (
-    <section className="mx-auto max-w-md rounded-3xl border border-stone-200 bg-white p-8">
-      <h1 className="text-3xl font-bold">Owner sign-in</h1>
-      <p className="mt-4 text-stone-600">Sign in with your pilot account. Your shop must be verified before you can manage its offers.</p>
+    <div className="login-layout"><aside className="login-story"><p className="page-eyebrow">A LITTLE MORE CONNECTED</p><h2>Your shop deserves<br />a place online.</h2><NeighborhoodArt /><p className="page-description">Create an offer. Review the details. Share something good with your neighborhood.</p></aside><section className="login-card">
+      <p className="page-eyebrow"><SmallIcon kind="bag" /> Welcome back</p>
+      <h1 className="page-title">Owner sign-in</h1>
+      <p className="page-description">Sign in with your pilot account. Your shop must be verified before you can manage its offers.</p>
       {!configured ? <p className="mt-6 rounded-xl bg-stone-100 p-4">Sign-in is not configured yet. Please try again later.</p> : (
         <form action={signIn} className="mt-6 space-y-5">
           {error && <p role="alert" className="text-red-800">{error === "invalid" ? "Unable to sign in. Check your email and password." : "Sign-in is temporarily unavailable. Please try again."}</p>}
@@ -19,6 +21,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <button className="w-full rounded-xl bg-emerald-900 p-4 font-semibold text-white">Sign in</button>
         </form>
       )}
-    </section>
+      <p className="login-note">Your shop. Your offers. Always reviewed by you before they go live.</p>
+    </section></div>
   );
 }
