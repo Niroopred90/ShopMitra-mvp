@@ -29,9 +29,8 @@ select is((select count(*)::int from public.offers where shop_id = '20000000-000
 select is((select count(*)::int from public.offer_sources), 1, 'owner A sees only own source records');
 select is((select count(*)::int from storage.objects where bucket_id = 'offer-sources'), 1, 'owner A sees only own media');
 select is((select count(*)::int from public.audit_events where shop_id = '20000000-0000-0000-0000-000000000002'), 0, 'audit history is tenant isolated');
-select lives_ok($$update public.offers set title = 'Changed own draft' where id = '30000000-0000-0000-0000-000000000001'$$, 'owner can edit own draft');
-with changed as (update public.offers set title = 'Attack' where shop_id = '20000000-0000-0000-0000-000000000002' returning id)
-select is((select count(*)::int from changed), 0, 'cross-shop updates affect no rows');
+select lives_ok($$select public.save_offer_draft('20000000-0000-0000-0000-000000000001','30000000-0000-0000-0000-000000000001',1,'{"title":"Changed own draft"}',gen_random_uuid())$$, 'owner can edit own draft through validated RPC');
+select throws_ok($$update public.offers set title = 'Attack' where shop_id = '20000000-0000-0000-0000-000000000002'$$, '42501', null, 'direct updates cannot bypass validated RPC');
 select throws_ok($$insert into public.offers(shop_id, title) values ('20000000-0000-0000-0000-000000000002', 'Attack')$$, '42501', null, 'cross-shop inserts denied');
 select throws_ok($$update public.offers set status = 'published'$$, '42501', null, 'direct publishing cannot bypass approval');
 select throws_ok($$insert into public.shop_memberships values ('20000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000001', 'owner', now())$$, '42501', null, 'owner cannot self-grant membership');
@@ -46,8 +45,7 @@ select is((select title from public.offers limit 1), 'Private draft B', 'cross-s
 
 select set_config('request.jwt.claim.sub', '10000000-0000-0000-0000-000000000003', true);
 select throws_ok($$insert into public.offers(shop_id, title) values ('20000000-0000-0000-0000-000000000001', 'Viewer attack')$$, '42501', null, 'viewer cannot create offers');
-with changed as (update public.offers set title = 'Viewer attack' returning id)
-select is((select count(*)::int from changed), 0, 'viewer cannot edit offers');
+select throws_ok($$update public.offers set title = 'Viewer attack'$$, '42501', null, 'viewer cannot edit offers');
 
 select set_config('request.jwt.claim.sub', '10000000-0000-0000-0000-000000000005', true);
 select is((select count(*)::int from public.shops), 0, 'unassigned account has no private access');

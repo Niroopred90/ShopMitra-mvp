@@ -1,0 +1,24 @@
+name: Private source retention
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 1 * * *"
+permissions:
+  contents: read
+jobs:
+  cleanup:
+    if: vars.PILOT_MAINTENANCE_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Delete expired private sources and request ledgers
+        run: node scripts/cleanup-ai-sources.mjs
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PILOT_SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.PILOT_SUPABASE_SECRET_KEY }}

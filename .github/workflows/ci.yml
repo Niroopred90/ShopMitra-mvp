@@ -18,6 +18,8 @@ jobs:
       - run: npx supabase start
       - run: npm run setup:local-env
       - run: npm run test:db
+      - run: npm run test:retention
+      - run: npm run verify:restore
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build

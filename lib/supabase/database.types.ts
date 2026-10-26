@@ -49,16 +49,54 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
-                },"offer_sources": {
+                },"offer_reports": {
                   Row: {
-                    "corrections": NonNullable<Json>,"extracted_fields": NonNullable<Json>,"offer_id": string,"shop_id": string,"storage_path": string | null,"transcript": string | null
+                    "created_at": string,"id": string,"offer_id": string,"reason": string,"reviewed_at": string | null,"reviewed_by": string | null,"shop_id": string,"status": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "corrections"?: NonNullable<Json>,"extracted_fields"?: NonNullable<Json>,"offer_id": string,"shop_id": string,"storage_path"?: string | null,"transcript"?: string | null
+                    "created_at"?: string,"id"?: string,"offer_id": string,"reason": string,"reviewed_at"?: string | null,"reviewed_by"?: string | null,"shop_id": string,"status"?: string
                   }
                   Update: {
-                    "corrections"?: NonNullable<Json>,"extracted_fields"?: NonNullable<Json>,"offer_id"?: string,"shop_id"?: string,"storage_path"?: string | null,"transcript"?: string | null
+                    "created_at"?: string,"id"?: string,"offer_id"?: string,"reason"?: string,"reviewed_at"?: string | null,"reviewed_by"?: string | null,"shop_id"?: string,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "offer_reports_offer_id_fkey"
+      columns: ["offer_id"]
+isOneToOne: false
+      referencedRelation: "offers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "offer_reports_offer_id_fkey"
+      columns: ["offer_id"]
+isOneToOne: false
+      referencedRelation: "public_offers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "offer_reports_shop_id_fkey"
+      columns: ["shop_id"]
+isOneToOne: false
+      referencedRelation: "public_shops"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "offer_reports_shop_id_fkey"
+      columns: ["shop_id"]
+isOneToOne: false
+      referencedRelation: "shops"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"offer_sources": {
+                  Row: {
+                    "corrections": NonNullable<Json>,"extracted_fields": NonNullable<Json>,"offer_id": string,"retained_until": string,"shop_id": string,"storage_path": string | null,"transcript": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "corrections"?: NonNullable<Json>,"extracted_fields"?: NonNullable<Json>,"offer_id": string,"retained_until"?: string,"shop_id": string,"storage_path"?: string | null,"transcript"?: string | null
+                  }
+                  Update: {
+                    "corrections"?: NonNullable<Json>,"extracted_fields"?: NonNullable<Json>,"offer_id"?: string,"retained_until"?: string,"shop_id"?: string,"storage_path"?: string | null,"transcript"?: string | null
                   }
                   Relationships: [
                     {
@@ -77,14 +115,14 @@ isOneToOne: false
                   ]
                 },"offers": {
                   Row: {
-                    "approved_at": string | null,"approved_by": string | null,"created_at": string,"created_by": string,"currency": string,"description": string,"expires_at": string | null,"id": string,"moderation_status": string,"price_minor": number | null,"quantity": number | null,"shop_id": string,"source_type": string,"starts_at": string | null,"status": string,"title": string,"unit": string | null,"updated_at": string
+                    "approved_at": string | null,"approved_by": string | null,"created_at": string,"created_by": string,"currency": string,"description": string,"expires_at": string | null,"id": string,"moderation_status": string,"price_minor": number | null,"quantity": number | null,"shop_id": string,"source_type": string,"starts_at": string | null,"status": string,"title": string,"unit": string | null,"updated_at": string,"version": number
                   }
                   ComputedFields: never
                   Insert: {
-                    "approved_at"?: string | null,"approved_by"?: string | null,"created_at"?: string,"created_by"?: string,"currency"?: string,"description"?: string,"expires_at"?: string | null,"id"?: string,"moderation_status"?: string,"price_minor"?: number | null,"quantity"?: number | null,"shop_id": string,"source_type"?: string,"starts_at"?: string | null,"status"?: string,"title": string,"unit"?: string | null,"updated_at"?: string
+                    "approved_at"?: string | null,"approved_by"?: string | null,"created_at"?: string,"created_by"?: string,"currency"?: string,"description"?: string,"expires_at"?: string | null,"id"?: string,"moderation_status"?: string,"price_minor"?: number | null,"quantity"?: number | null,"shop_id": string,"source_type"?: string,"starts_at"?: string | null,"status"?: string,"title": string,"unit"?: string | null,"updated_at"?: string,"version"?: number
                   }
                   Update: {
-                    "approved_at"?: string | null,"approved_by"?: string | null,"created_at"?: string,"created_by"?: string,"currency"?: string,"description"?: string,"expires_at"?: string | null,"id"?: string,"moderation_status"?: string,"price_minor"?: number | null,"quantity"?: number | null,"shop_id"?: string,"source_type"?: string,"starts_at"?: string | null,"status"?: string,"title"?: string,"unit"?: string | null,"updated_at"?: string
+                    "approved_at"?: string | null,"approved_by"?: string | null,"created_at"?: string,"created_by"?: string,"currency"?: string,"description"?: string,"expires_at"?: string | null,"id"?: string,"moderation_status"?: string,"price_minor"?: number | null,"quantity"?: number | null,"shop_id"?: string,"source_type"?: string,"starts_at"?: string | null,"status"?: string,"title"?: string,"unit"?: string | null,"updated_at"?: string,"version"?: number
                   }
                   Relationships: [
                     {
@@ -95,6 +133,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     },{
       foreignKeyName: "offers_shop_id_fkey"
+      columns: ["shop_id"]
+isOneToOne: false
+      referencedRelation: "shops"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"shop_daily_metrics": {
+                  Row: {
+                    "day": string,"page_views": number,"shop_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "day"?: string,"page_views"?: number,"shop_id": string
+                  }
+                  Update: {
+                    "day"?: string,"page_views"?: number,"shop_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "shop_daily_metrics_shop_id_fkey"
+      columns: ["shop_id"]
+isOneToOne: false
+      referencedRelation: "public_shops"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "shop_daily_metrics_shop_id_fkey"
       columns: ["shop_id"]
 isOneToOne: false
       referencedRelation: "shops"
@@ -129,14 +193,14 @@ isOneToOne: false
                   ]
                 },"shops": {
                   Row: {
-                    "address": string,"category": string,"created_at": string,"description": string,"id": string,"name": string,"neighborhood": string,"slug": string,"visibility": string
+                    "address": string,"category": string,"created_at": string,"description": string,"id": string,"location": unknown,"name": string,"neighborhood": string,"slug": string,"visibility": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "address"?: string,"category": string,"created_at"?: string,"description"?: string,"id"?: string,"name": string,"neighborhood": string,"slug": string,"visibility"?: string
+                    "address"?: string,"category": string,"created_at"?: string,"description"?: string,"id"?: string,"location"?: unknown,"name": string,"neighborhood": string,"slug": string,"visibility"?: string
                   }
                   Update: {
-                    "address"?: string,"category"?: string,"created_at"?: string,"description"?: string,"id"?: string,"name"?: string,"neighborhood"?: string,"slug"?: string,"visibility"?: string
+                    "address"?: string,"category"?: string,"created_at"?: string,"description"?: string,"id"?: string,"location"?: unknown,"name"?: string,"neighborhood"?: string,"slug"?: string,"visibility"?: string
                   }
                   Relationships: [
                     
@@ -181,8 +245,46 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "current_user_is_admin":
+            "begin_ai_request":
+{ Args: { "p_offer_id": string,"p_request_id": string,"p_shop_id": string }; Returns: string
+                           },
+"complete_ai_draft":
+{ Args: { "p_extracted": Json,"p_payload": Json,"p_request_id": string,"p_storage_path"?: string,"p_transcript": string }; Returns: string
+                           },
+"current_user_is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"discover_shops":
+{ Args: { "p_lat"?: number,"p_limit"?: number,"p_lon"?: number,"p_neighborhood"?: string,"p_radius_m"?: number }; Returns: {
+              "address": string,"category": string,"distance_m": number,"id": string,"name": string,"neighborhood": string,"slug": string
+            }[]
+                           },
+"fail_ai_request":
+{ Args: { "p_request_id": string }; Returns: undefined
+                           },
+"moderate_content":
+{ Args: { "p_hidden": boolean,"p_id": string,"p_kind": string,"p_reason": string }; Returns: undefined
+                           },
+"publish_offer":
+{ Args: { "p_expected_version": number,"p_offer_id": string,"p_request_id": string }; Returns: string
+                           },
+"record_shop_view":
+{ Args: { "p_rate_key": string,"p_shop_id": string }; Returns: boolean
+                           },
+"review_offer_report":
+{ Args: { "p_id": string,"p_status": string }; Returns: undefined
+                           },
+"run_private_maintenance":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
+"save_offer_draft":
+{ Args: { "p_expected_version": number,"p_offer_id": string,"p_payload": Json,"p_request_id": string,"p_shop_id": string }; Returns: string
+                           },
+"submit_offer_report":
+{ Args: { "p_offer_id": string,"p_rate_key": string,"p_reason": string }; Returns: string
+                           },
+"withdraw_offer":
+{ Args: { "p_expected_version": number,"p_offer_id": string,"p_request_id": string }; Returns: string
                            }
           }
           Enums: {

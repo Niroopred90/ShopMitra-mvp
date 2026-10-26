@@ -23,7 +23,7 @@ export async function signIn(form: FormData) {
 
 export async function signOut() {
   const client = await createClient();
-  const { error } = await client.auth.signOut();
+  const { error } = await client.auth.signOut({ scope: "local" });
   if (error) redirect("/owner?error=signout");
   redirect("/owner/login");
 }

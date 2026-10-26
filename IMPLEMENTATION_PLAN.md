@@ -4,14 +4,25 @@
 
 Based on the October 2026 Technical & Field Execution Guide, especially sections 2, 7-8, 10-13. Repository inspection found only an empty `test` file; no application, dependencies, database, or automated checks exist yet.
 
-Progress: steps 2 and 3 are implemented and locally verified. Step 4's code and automated checks are complete; its physical Android scan and permanent-domain gate remain pending. Later steps remain planned. No public deployment, owner outreach, hosted account provisioning, or paid services have been performed.
+Progress: the software for steps 2–8 is implemented, with local verification recorded below. Release/pilot materials and a local recovery rehearsal support steps 1, 9, and 10. Field activities, real AI/provider quality checks, hosted operations, physical Android/weak-network verification, and the actual five-shop pilot remain open. No public deployment, owner outreach, hosted account provisioning, paid AI calls, commits, or pushes were performed during the fan-out implementation.
 
 The guide places the main build in weeks 3-8 but also requests a live QR test on days 8-12 and a text-offer test by day 14. Reconcile these with a small vertical prototype during weeks 1-2, followed by hardening and the remaining features in weeks 3-8. Dates are relative to an agreed kickoff, not promised launch dates.
+
+## Integrated local validation after fan-out implementation
+
+- Lint, strict type checks, and production build passed.
+- All 123 transactional database assertions passed across tenant isolation, lifecycle/retries/versions, AI draft-only rules, retention visibility, discovery, moderation, and grants.
+- All 30 app/browser/adapter/validation cases passed, including the owner-publish/customer-read/edit/reapprove/withdraw journey and bounded streaming requests. AI provider calls are mocked in these tests.
+- The physical retention smoke test uploaded one synthetic expired source, verified object deletion and clearing of private fields, then removed its fixture.
+- The final local restore rehearsal matched data/public-view counts, RLS flags, and key role privileges in a separate temporary database. Private storage-object backup remains a hosted release requirement.
+- CI and disabled-by-default maintenance workflows are prepared. These final changes were not committed/pushed, so no GitHub CI or public deployment result is claimed.
+
+The open field, provider, and hosting checkboxes below remain required. Automated checks do not establish owner consent, sales impact, real multilingual accuracy, a scheduled hosted backup/cleanup, or successful physical-device tests.
 
 ## 1. Confirm pilot and product decisions (days 1-3)
 
 - [ ] Select one Hyderabad neighborhood and 2-3 shop categories.
-- [ ] Create a visit tracker: shop code, area/category, permission to follow up, current sharing behavior, device/language, reaction, objection, next step, responsible person.
+- [x] Create a visit tracker: shop code, area/category, permission to follow up, current sharing behavior, device/language, reaction, objection, next step, responsible person. See `docs/pilot-field-kit.md`; no real visit records have been collected.
 - [ ] Shortlist 15-20 shops; plan 10-15 interviews and five consenting pilot participants.
 - [ ] Have the humans settle collaborator responsibilities and the written terms identified in the guide before collaborator contributions or access.
 - [ ] Record decisions for owner login method, ownership verification, permanent domain/slug policy, expiry semantics, and public shop fields.
@@ -70,19 +81,19 @@ Exit: scanning a physical sample QR on Android opens the intended shop without l
 
 ## 5. Complete owner-approved text publishing (days 12-14)
 
-- [ ] Build the owner dashboard and manual offer creation/editing form.
-- [ ] Add a review screen for title, price, quantity/unit, and dates, with explicit publish action.
-- [ ] Support drafts, edits, withdrawal, validation errors, session expiry, and safe retry behavior.
-- [ ] Record approval and change history; ensure retries do not create duplicate offers.
-- [ ] Invalidate public-page caches after publication, edits, withdrawal, and moderation changes.
+- [x] Build the owner dashboard and manual offer creation/editing form.
+- [x] Add a review screen for title, price, quantity/unit, and dates, with explicit publish action.
+- [x] Support drafts, edits, withdrawal, validation errors, session expiry, and safe retry behavior.
+- [x] Record approval and change history; ensure retries do not create duplicate offers.
+- [x] Revalidate affected paths and use fresh public reads after publication, edits, withdrawal, and moderation changes.
 - [ ] Review three screens with field participants: public shop, owner dashboard, offer review.
 
 Exit: an authorized owner can publish/edit a text offer and a customer sees the update on the same QR URL. Aim to test a simple offer in under 60 seconds; record actual results. This is the first product-value gate.
 
 ## 6. Harden the core journey (weeks 3-4)
 
-- [ ] Add rate limits, server validation, accessible forms, helpful failures, and monitoring with redacted logs.
-- [ ] Complete integration/browser tests for auth, tenant isolation, offer lifecycle, exact expiry boundaries, freshness, and QR routing.
+- [x] Add database-backed write/upload/request limits, server validation, labeled forms, helpful failures, browser security headers, and fixed-field operational logs/health checks. Hosted alerting remains unconfigured.
+- [x] Complete integration/browser tests for auth, tenant isolation, offer lifecycle, exact expiry boundaries, freshness, and QR routing.
 - [ ] Test low-cost Android devices, slow connections, refresh/retry, and interrupted sessions.
 - [ ] Fix issues observed in interviews and screen reviews before adding AI complexity.
 
@@ -90,30 +101,33 @@ Exit: core checks pass in CI, critical security defects are resolved, and field 
 
 ## 7. Add AI-assisted drafts incrementally (weeks 5-6)
 
-- [ ] Define a structured extraction schema and provider adapter; start with text extraction.
-- [ ] Add private photo uploads, content/type/size checks, and image/OCR extraction.
-- [ ] Add voice recording/upload, transcription, and extraction; test Telugu, Hindi, and English samples.
-- [ ] Store restricted source references, transcripts, extracted fields, owner corrections, and processing state; define retention/deletion.
-- [ ] Flag ambiguity and require explicit owner review. Every AI path ends in a draft, including retries.
-- [ ] Handle timeout, invalid model output, provider failure, and interrupted uploads with manual fallback.
-- [ ] Bound request rates, file sizes, and provider usage; record costs without making financial commitments.
+- [x] Define a structured extraction schema and real server-side provider adapter, with offline request/response tests.
+- [x] Add private photo uploads, content/type/signature/size checks, and image-extraction adapter.
+- [x] Add phone capture/upload and transcription/extraction adapters with Telugu/Hindi/English language selection.
+- [ ] Validate actual provider output on consented Telugu, Hindi, and English samples; no real quality or cost claim is supported yet.
+- [x] Store restricted source references, transcripts, extracted fields, corrections, and request state; implement 30-day visibility and physical cleanup tooling.
+- [ ] Confirm retention policy with the lead and activate/monitor the scheduled cleanup before real media collection.
+- [x] Flag ambiguity and require explicit owner review. Every AI path ends in a draft, including retries.
+- [x] Handle timeout, invalid output, provider failure, and interrupted/ambiguous completion with manual fallback and source preservation.
+- [x] Bound database request budgets, file sizes, and output tokens; require explicit models/credentials. Provider-side spending limits and actual cost measurement remain release setup.
 
 Exit: representative text/photo/voice samples yield editable drafts; AI never publishes automatically; malformed or ambiguous prices/dates cannot silently become public offers.
 
 ## 8. Add discovery, moderation, and analytics (week 7)
 
-- [ ] Add shop coordinates and PostGIS indexes/proximity queries, with server-side input bounds.
-- [ ] Offer location permission and manual neighborhood selection; return only eligible public shops.
-- [ ] Add false-offer reporting and restricted admin review/hide/restore actions with an audit trail.
-- [ ] Define scan/page-view, publication, time-to-publish, and repeat-visit metrics; distinguish a QR entry from a generic page visit where measurable.
-- [ ] Select a privacy-safe aggregation/return-visitor approach and document consent, retention, and limitations. Keep owner contacts and raw media out of analytics.
+- [x] Add shop coordinates and PostGIS indexes/proximity queries, with server-side input bounds.
+- [x] Offer location permission and manual neighborhood selection; return only eligible public shops.
+- [x] Add private, rate-limited false-offer reports and restricted admin review/hide/restore actions with an audit trail; internal moderation reasons are admin-only.
+- [x] Define the pilot scorecard and implement aggregate daily page displays. Publication/time-to-publish evidence is in offer history/field observations; QR scans and returning visitors are explicitly unmeasured.
+- [x] Use no persistent visitor identifiers; expire daily HMAC abuse-control buckets. Document trusted-proxy configuration, shared-bucket limits, and measurement limitations.
 
 Exit: discovery works when geolocation is refused; unauthorized moderation fails; hidden content disappears publicly; metrics can be checked against known test events.
 
 ## 9. Prepare the five-shop release (week 8)
 
 - [ ] Verify deployment/domain ownership, environment separation, secrets, hosting limits, and CI gates.
-- [ ] Configure backups and perform a restore exercise; document rollback and incident/report handling.
+- [x] Implement and run a separate local database backup/restore rehearsal; document rollback and incident/report handling in `docs/release-runbook.md`.
+- [ ] Configure hosted backup schedules/alerts and separate storage-object backups; perform a hosted recovery exercise against agreed recovery targets.
 - [ ] Run the full QR -> owner update -> public visibility flow on actual field devices and weak networks.
 - [ ] Prepare onboarding, QR placement, owner review instructions, support process, and consent records.
 - [ ] Review release evidence and unresolved issues with the lead before the authorized pilot deployment.
@@ -132,4 +146,4 @@ Exit: a written continue/change/stop decision backed by field evidence. Expansio
 
 ## Recommended first implementation ticket
 
-Next development ticket is step 5: owner-approved text offers. Step 4's code is tested locally; keep its physical Android scan and permanent public origin as open release prerequisites. Complete the core owner-to-customer update journey before introducing AI.
+Next is release review and the human/provider/hosting gates listed above. Use `docs/pilot-field-kit.md` for interviews, consent, onboarding, and the weekly scorecard; use `docs/release-runbook.md` for deployment ownership, monitoring, retention activation, recovery, and rollback. Do not mark the real pilot or business hypotheses complete from automated tests.

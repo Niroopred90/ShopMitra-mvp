@@ -16,6 +16,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-5 py-5">
             <Link href="/" className="text-2xl font-extrabold tracking-tight text-emerald-900">ShopMitra<span className="text-orange-600">.</span></Link>
             <nav aria-label="Main navigation" className="flex gap-5 text-sm font-semibold">
+              <Link href="/nearby">Nearby shops</Link>
               <Link href="/s/demo-shop">Demo shop</Link>
               <Link href="/owner">For owners</Link>
             </nav>

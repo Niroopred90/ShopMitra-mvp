@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { loadStorefront, storefrontUrl } from "@/lib/storefront";
 import { ShareShop } from "@/components/share-shop";
 import { StorefrontUnavailable } from "@/components/storefront-unavailable";
+import Link from "next/link";
+import { RecordShopView } from "@/components/record-shop-view";
 
 type Props = { params: Promise<{ "store-slug": string }> };
 export const dynamic = "force-dynamic";
@@ -32,6 +34,7 @@ export default async function StorefrontPage({ params }: Props) {
     ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${shop.name}, ${shop.address}, ${shop.neighborhood}`)}` : null;
   return (
     <article className="mx-auto max-w-2xl break-words">
+      {!demo && <RecordShopView shopId={shop.id} />}
       {demo && <p className="mb-5 inline-block rounded-full bg-orange-100 px-4 py-2 text-sm font-semibold text-orange-900">Demo only · Not a real business</p>}
       <section className="rounded-3xl bg-emerald-900 p-8 text-white md:p-12">
         <p className="text-sm font-semibold uppercase tracking-widest text-emerald-100">{shop.category} · {shop.neighborhood}</p>
@@ -50,6 +53,7 @@ export default async function StorefrontPage({ params }: Props) {
           {offer.description && <p className="mt-3 whitespace-pre-line text-stone-600">{offer.description}</p>}
           {offer.price_minor !== null && <p className="mt-4 text-2xl font-bold text-emerald-900">{money.format(offer.price_minor / 100)}{offer.quantity !== null && offer.unit && <span className="ml-2 text-sm font-normal text-stone-600">for {offer.quantity} {offer.unit}</span>}</p>}
           {offer.expires_at && <p className="mt-4 text-sm text-stone-600">Ends <time dateTime={offer.expires_at}>{dates.format(new Date(offer.expires_at))}</time></p>}
+          <Link href={`/report/${offer.id}`} className="mt-4 inline-block text-sm text-stone-600 underline">Report this offer</Link>
         </li>)}</ul> : <div className="mt-4 rounded-2xl border border-dashed border-stone-300 bg-white p-8">
           <p className="font-semibold">No offers yet</p>
           <p className="mt-2 text-stone-600">{demo ? "Published offers will appear here. This preview has no live shop data." : "There are no current offers. Check back for updates from the shop."}</p>

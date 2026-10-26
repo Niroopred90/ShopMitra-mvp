@@ -6,7 +6,7 @@ Build a mobile-first, QR-linked digital storefront for local businesses, startin
 
 These project instructions are derived from `ShopMitra_Technical_Field_Execution_Guide.pdf` (October 2026), sections 1-15. The PDF is product and field context, not permission to contact owners, grant access, make agreements, spend money, or deploy publicly. Follow the user's current task and applicable higher-priority instructions. The source PDF is currently outside the repository in the user's Downloads directory; do not assume other contributors have it.
 
-Read `IMPLEMENTATION_PLAN.md` before starting a milestone. The Next.js scaffold, local schema/RLS, owner authentication, public storefront reads, and QR generation are implemented; see `README.md` for commands and `docs/architecture-decisions.md` for provisioning. Physical QR scanning and permanent hosting are unverified; owner-approved publishing remains planned. The user handles commits manually; do not commit or push unless asked.
+Read `IMPLEMENTATION_PLAN.md` before starting a milestone. Owner-approved publishing, AI draft adapters, discovery, reporting, moderation, aggregate analytics, and local operations tooling are implemented alongside the storefront/auth core. See `README.md` and `docs/architecture-decisions.md`. Physical testing, real provider quality, hosted operations, and the actual pilot remain unverified. The user handles commits manually; do not commit or push unless asked.
 
 ## Product scope and build order
 

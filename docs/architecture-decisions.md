@@ -8,7 +8,7 @@ A trusted pilot operator creates/invites the owner through Supabase Auth, indepe
 
 Use the SQL editor/trusted operational tooling for provisioning for now. Membership and admin tables are not writable by application users. Never accept role/admin claims from user-editable Auth metadata. Membership removal revokes access on the next database query; changing a display name does not alter identity. Admins are explicitly provisioned in `private.admins`; there is no admin signup route.
 
-Roles: owner/staff may edit their shop's drafts; viewer may only read. Owner and staff privileges are identical at this milestone. Membership management remains operator-only. Admins can read private records for support but cannot publish or moderate via the current UI. Future admin mutations need individually authorized, audited actions.
+Roles: owner/staff may create/edit/approve/withdraw their shop's offers; viewer may only read. Owner and staff privileges are identical for publishing. Membership management remains operator-only. Admin moderation/report-review RPCs independently enforce administrator membership and write audit events. Internal moderation/report reasons are admin-only, while ordinary offer-change history remains readable by shop members.
 
 ## Data and publication
 
@@ -16,9 +16,9 @@ Shop rows contain public business fields only. Memberships, full offers, source 
 
 Offers use integer paise (`price_minor`, INR only) with a 0–100,000,000 bound. Quantity is an optional decimal with three fractional places. Published offers require approval metadata and expiry. Starts are inclusive; expiry is exclusive, checked at read time. Scheduled future offers are excluded until start. Date-only end dates in later forms will convert the next midnight in `Asia/Kolkata` to UTC. No cron task is required to hide expired offers.
 
-Drafts are the only user-writable offer state in this milestone. Clients cannot modify approval, tenant, creator, status, or moderation fields. A dedicated owner-confirmation publication action/RPC will be implemented in step 5. Media upload is restricted to a private 10 MB bucket and paths beginning with the authorized shop UUID; updates/upserts are currently denied. Source records are read-only until AI ingestion is implemented. Audit entries are trigger-written and read-only for clients.
+All client offer writes go through validated RPCs; direct table writes are revoked. Saving a published offer clears approval and returns it to draft. Publishing requires a separate explicit confirmation, a current version, valid price/expiry, and permission; retry keys avoid duplicates. AI completion can only save a draft, never approval. Media uploads are limited to 2 MB in a private shop-scoped bucket; database policies also bound direct Storage API inserts. Updates/upserts are denied. Source records are written by the atomic draft-completion RPC and are read-only for clients. Audit entries are trigger-written and read-only for clients.
 
-Before collecting real media, implement automatic deletion and confirm a retention period with the pilot lead; proposed source-media retention is 30 days. Retain only the minimum correction evidence needed. This milestone contains no real media or contacts.
+Source visibility ends after 30 days; the cleanup script physically removes expired and abandoned media and clears retained input/corrections. A disabled-by-default daily workflow is provided; it requires explicit repository configuration and secrets. Confirm the policy and activate/monitor cleanup before collecting real media. Expired private request ledgers are cleaned by a service-role-only maintenance RPC. No real owner media or contacts were collected by development.
 
 ## Stable URLs and hosting
 

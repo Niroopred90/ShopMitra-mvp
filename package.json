@@ -13,7 +13,11 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test:e2e": "playwright test",
     "test:db": "supabase test db",
-    "setup:local-env": "node scripts/local-env.mjs"
+    "setup:local-env": "node scripts/local-env.mjs",
+    "backup:local": "node scripts/local-backup.mjs backup",
+    "verify:restore": "node scripts/local-backup.mjs verify",
+    "cleanup:sources": "node --env-file=.env.local scripts/cleanup-ai-sources.mjs",
+    "test:retention": "node --env-file=.env.local scripts/test-local-retention.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.7",
