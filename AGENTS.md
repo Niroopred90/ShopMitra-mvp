@@ -68,7 +68,8 @@ Read `IMPLEMENTATION_PLAN.md` before starting a milestone. Owner-approved publis
 
 ## Working conventions
 
-- Current user preference: keep development entirely local. Use `npm run dev:local` for the local stack with live AI disabled. Do not configure hosting, send invitations, run paid provider calls, or enable scheduled hosted jobs without a new user instruction.
+- The user has now authorized free feedback hosting on Netlify + a dedicated Supabase Free project. Keep live AI off, use fictional feedback data with new private credentials, and do not incur charges or send invitations. Local development still uses `npm run dev:local`. See `docs/feedback-deployment.md`; account sign-in/connection is required before publishing. Hosted maintenance is not enabled automatically.
+- The user authorized owner self-signup with email confirmation and independently approved shop requests. Registration must never grant shop membership or administrator rights automatically. Keep hosted signup disabled until custom SMTP and the updated deployment are ready; see `docs/owner-signup-setup.md`. Test emails stay local unless a real recipient has consented to a delivery test.
 - Use `dev` as the default development branch. Run checks on `dev` before promoting changes through a pull request from `dev` to `main`.
 - Keep `main` for tested releases. Require the `checks` CI job on the promotion pull request; do not push development changes directly to `main` or bypass failed checks.
 - Keep changes focused on the assigned milestone and preserve unrelated user work.

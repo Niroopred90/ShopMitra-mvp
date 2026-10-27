@@ -139,6 +139,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"owner_shop_requests": {
+                  Row: {
+                    "address": string,"category": string,"description": string,"id": string,"name": string,"neighborhood": string,"reviewed_at": string | null,"reviewed_by": string | null,"shop_id": string | null,"status": string,"submitted_at": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "address"?: string,"category": string,"description"?: string,"id": string,"name": string,"neighborhood": string,"reviewed_at"?: string | null,"reviewed_by"?: string | null,"shop_id"?: string | null,"status"?: string,"submitted_at"?: string,"user_id": string
+                  }
+                  Update: {
+                    "address"?: string,"category"?: string,"description"?: string,"id"?: string,"name"?: string,"neighborhood"?: string,"reviewed_at"?: string | null,"reviewed_by"?: string | null,"shop_id"?: string | null,"status"?: string,"submitted_at"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "owner_shop_requests_shop_id_fkey"
+      columns: ["shop_id"]
+isOneToOne: true
+      referencedRelation: "public_shops"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "owner_shop_requests_shop_id_fkey"
+      columns: ["shop_id"]
+isOneToOne: true
+      referencedRelation: "shops"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"shop_daily_metrics": {
                   Row: {
                     "day": string,"page_views": number,"shop_id": string
@@ -282,6 +308,9 @@ isOneToOne: false
 "review_offer_report":
 { Args: { "p_id": string,"p_status": string }; Returns: undefined
                            },
+"review_owner_shop_request":
+{ Args: { "p_approve": boolean,"p_method"?: string,"p_request_id": string,"p_slug"?: string,"p_verified"?: boolean }; Returns: string
+                           },
 "run_private_maintenance":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            },
@@ -290,6 +319,9 @@ isOneToOne: false
                            },
 "submit_offer_report":
 { Args: { "p_offer_id": string,"p_rate_key": string,"p_reason": string }; Returns: string
+                           },
+"submit_owner_shop_request":
+{ Args: { "p_payload": Json,"p_request_id": string }; Returns: string
                            },
 "withdraw_offer":
 { Args: { "p_expected_version": number,"p_offer_id": string,"p_request_id": string }; Returns: string

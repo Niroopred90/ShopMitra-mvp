@@ -21,7 +21,7 @@ export default async function OwnerPage({ searchParams }: { searchParams: Promis
           const shop = membership.shops;
           return <li key={membership.shop_id} className="owner-shop-card"><div className="owner-shop-top"><span className="owner-shop-icon"><SmallIcon kind="bag" /></span><div><h2 className="text-xl font-bold">{shop?.name}</h2><p className="mt-2 text-stone-600">{shop?.neighborhood}</p></div></div><div className="owner-shop-actions">{shop?.visibility === "public" ? <ShopLink href={`/s/${shop.slug}`} className="button-text">View storefront and QR</ShopLink> : <p className="mt-4 text-sm">This shop is not publicly available.</p>}<Link href={`/owner/shops/${membership.shop_id}/offers`} className="button-primary">Manage offers <SmallIcon kind="arrow" /></Link></div></li>;
         })}</ul>
-      ) : <p className="mt-6 rounded-xl bg-white p-6">No verified shops are linked to your account. Contact the pilot lead to verify your shop.</p>}
+      ) : <div className="mt-6 rounded-xl bg-white p-6"><p>No verified shops are linked to your account.</p><Link href="/owner/onboarding" className="button-primary mt-5">Request a shop or check approval</Link></div>}
       <form action={signOut} className="mt-8"><button className="rounded-lg border border-stone-400 px-5 py-3 font-semibold">Sign out</button></form>
     </section>
   );

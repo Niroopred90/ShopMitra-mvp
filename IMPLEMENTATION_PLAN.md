@@ -2,9 +2,11 @@
 
 ## Basis and current state
 
-Current scope: the user explicitly chose **keep everything local for now**. Hosting, paid/live AI testing, public QR printing, and actual field operations are deferred. Local admin shop setup and network/session resilience checks are included in the current implementation; they do not establish real-shop consent or physical-device verification.
+Current scope: the user subsequently authorized a **free public feedback deployment on Netlify with a dedicated Supabase project**. The feedback site is live at `https://shopmartn.netlify.app`, with live AI disabled. A private fictional owner account and test shop have been provisioned. See `docs/feedback-deployment.md` for hosted validation and remaining checks. Paid/live AI testing, physical QR printing, and actual field operations remain deferred; feedback testing does not establish real-shop consent or physical-device verification.
 
-Google business discovery: `/nearby` offers keyless Google Maps search links for Indian PIN codes and opt-in current location, separate from registered ShopMitra offers. Results open externally; in-app Places API results, postal-directory validation, and Google listing relevance are not implemented/verified. No billing or hosted integration was configured.
+Owner self-signup is now authorized. Its implementation adds email confirmation, a private shop-request queue, and independently verified administrator approval before creating a shop or membership. Hosted activation requires custom SMTP, migration 008, and the user's manual source commit/push followed by deployment. See `docs/owner-signup-setup.md`; do not describe signup as publicly available until its hosted checks pass.
+
+Google business discovery: `/nearby` offers keyless Google Maps search links for Indian PIN codes and opt-in current location, separate from registered ShopMitra offers. Results open externally; in-app Places API results, postal-directory validation, and Google listing relevance are not implemented/verified. No Google API billing was configured.
 
 Local-only follow-up: admin shop setup/editing now replaces direct SQL for normal shop provisioning, and `npm run dev:local` starts the local stack with live AI explicitly disabled. Migration 007 was applied without resetting existing data. All 151 database checks passed. App coverage grew to 35 cases: 34 passed in the combined run, then all 3 admin setup cases passed in a focused rerun after fixing test cleanup to wait for the saved version. Delayed/retransmitted saves and interrupted-session recovery passed. Lint, strict types, and production build passed. The user still handles commits manually.
 

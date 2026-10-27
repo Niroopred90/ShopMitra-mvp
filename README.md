@@ -116,6 +116,14 @@ Commit schema and policies under `supabase/migrations/`; do not rely on untracke
 
 Local setup follows the [Supabase CLI documentation](https://supabase.com/docs/guides/local-development/cli/getting-started); application setup follows the [Next.js installation documentation](https://nextjs.org/docs/app/getting-started/installation).
 
+## Owner signup and approval
+
+The owner signup flow is `/owner/signup` → email confirmation → `/owner/onboarding` → independently verified administrator approval in `/admin`. Registration creates no shop memberships or administrator privileges. Requests stay private until an administrator approves and creates a storefront.
+
+Local signup uses confirmation emails in the local mail viewer at `http://127.0.0.1:54324`; run `npm run dev:local` and open `http://127.0.0.1:3000/owner/signup`. `SITE_URL` must identify that browser origin, and Supabase must allow its exact `/owner/auth/callback` redirect.
+
+Hosted signup is **not yet enabled**. Migration 008 is installed, but SMTP setup and the user's manual commit/push/deployment remain required. Follow [owner signup setup](docs/owner-signup-setup.md), including the Gmail SMTP option for small feedback tests. Keep live AI disabled and use fictional business details during feedback testing.
+
 ## Publishing and retries
 
 Sign in as owner A, choose **Manage offers**, and create a text offer. Saving produces a private draft. Review the price, quantity/unit, and dates, then explicitly confirm and publish. Editing a published offer returns it to draft until reapproved. Withdraw removes it from public reads. RPCs enforce tenant roles, write limits, request idempotency, and optimistic versions; stale edits require reloading. End dates are inclusive local calendar days converted to the next midnight in India as an exclusive boundary. Price is stored as integer paise.
