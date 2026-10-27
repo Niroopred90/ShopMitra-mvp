@@ -2,7 +2,9 @@
 
 The new app flow is: create account → confirm email → submit one shop request → independent admin ownership verification → approved shop and owner access. Requests are private, and registration alone grants no shop membership. This feedback preview still requires fictional shop details and keeps live AI disabled.
 
-Implementation validation: lint, types, production build, all 176 local database assertions, 13 Chromium owner/admin/onboarding checks, and 3 WebKit onboarding checks passed. Confirmation emails were delivered only to the local mail viewer. Hosted migration 008 is installed; the updated app and public signup are not live until the user commits/pushes and SMTP is configured. Real external email delivery remains unverified.
+Implementation validation: lint, types, production build, all 176 local database assertions, 13 Chromium owner/admin/onboarding checks, and 3 WebKit onboarding checks passed. Confirmation emails were delivered only to the local mail viewer. Hosted migration 008 is installed. The user committed/pushed the changes as `8159b12`, but Netlify blocked that deployment with an exposed-secrets scanning finding; its exact cause is not yet verified. The tracked working tree was checked for the actual private Supabase key and rate-limit secret; neither value was present. Do not disable scanning or assume the finding is harmless without reviewing the deploy log.
+
+SMTP setup: Gmail custom SMTP is enabled at `smtp.gmail.com:587`, with sender name `ShopMitra Feedback`. The user entered the Google App Password directly and saved it; Supabase displayed “Successfully updated settings.” No SMTP password was read, copied into the repository, or sent through chat. Real external email delivery remains unverified. Public signup is still disabled until the updated deployment succeeds and a consenting tester verifies delivery.
 
 ## Email delivery prerequisite
 

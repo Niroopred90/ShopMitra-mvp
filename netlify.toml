@@ -6,6 +6,8 @@
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
   FEEDBACK_MODE = "true"
+  # The public site origin appears in documentation and generated QR links.
+  SECRETS_SCAN_OMIT_KEYS = "SITE_URL"
 
 # Credentials belong in Netlify environment settings, scoped to Builds + Functions.
 # The current OpenNext adapter is detected by Netlify; this is not a static export.
