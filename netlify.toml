@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build:feedback"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"
+  FEEDBACK_MODE = "true"
+
+# Credentials belong in Netlify environment settings, scoped to Builds + Functions.
+# The current OpenNext adapter is detected by Netlify; this is not a static export.

@@ -5,6 +5,7 @@ type Media = { bytes: Uint8Array; type: string };
 export type AiInput = { mode: "text" | "photo" | "voice"; text: string; language: "te" | "hi" | "en"; media?: Media };
 
 export function aiConfig(): ProviderConfig | null {
+  if (process.env.FEEDBACK_MODE === "true") return null;
   return process.env.OPENAI_API_KEY && process.env.OPENAI_OFFER_MODEL
     ? { apiKey: process.env.OPENAI_API_KEY, offerModel: process.env.OPENAI_OFFER_MODEL, transcriptionModel: process.env.OPENAI_TRANSCRIPTION_MODEL } : null;
 }

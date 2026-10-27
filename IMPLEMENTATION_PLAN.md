@@ -4,6 +4,8 @@
 
 Current scope: the user explicitly chose **keep everything local for now**. Hosting, paid/live AI testing, public QR printing, and actual field operations are deferred. Local admin shop setup and network/session resilience checks are included in the current implementation; they do not establish real-shop consent or physical-device verification.
 
+Google business discovery: `/nearby` offers keyless Google Maps search links for Indian PIN codes and opt-in current location, separate from registered ShopMitra offers. Results open externally; in-app Places API results, postal-directory validation, and Google listing relevance are not implemented/verified. No billing or hosted integration was configured.
+
 Local-only follow-up: admin shop setup/editing now replaces direct SQL for normal shop provisioning, and `npm run dev:local` starts the local stack with live AI explicitly disabled. Migration 007 was applied without resetting existing data. All 151 database checks passed. App coverage grew to 35 cases: 34 passed in the combined run, then all 3 admin setup cases passed in a focused rerun after fixing test cleanup to wait for the saved version. Delayed/retransmitted saves and interrupted-session recovery passed. Lint, strict types, and production build passed. The user still handles commits manually.
 
 Based on the October 2026 Technical & Field Execution Guide, especially sections 2, 7-8, 10-13. Repository inspection found only an empty `test` file; no application, dependencies, database, or automated checks exist yet.
@@ -13,6 +15,8 @@ Progress: the software for steps 2–8 is implemented, with local verification r
 The guide places the main build in weeks 3-8 but also requests a live QR test on days 8-12 and a text-offer test by day 14. Reconcile these with a small vertical prototype during weeks 1-2, followed by hardening and the remaining features in weeks 3-8. Dates are relative to an agreed kickoff, not promised launch dates.
 
 ## Integrated local validation after fan-out implementation
+
+Latest pre-deployment retest: lint, types, production build, all 151 database checks, all 47 production-mode Chromium app/adapter cases, all 13 WebKit/iPhone-viewport critical cases, retention deletion, and isolated backup/restore passed. The 19 offline AI checks also passed independently and are a subset of the 47 cases. See `docs/testing-report.md`. Real devices, live AI quality, and hosted operations remain unverified.
 
 - Lint, strict type checks, and production build passed.
 - All 123 transactional database assertions passed across tenant isolation, lifecycle/retries/versions, AI draft-only rules, retention visibility, discovery, moderation, and grants.

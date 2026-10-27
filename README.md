@@ -83,6 +83,8 @@ npm run test:e2e
 
 Browser tests start the production server themselves; build first and keep port 3000 free. With local Supabase configured, run `npm run test:db` and `TEST_LOCAL_AUTH=1 npm run test:e2e` for database/auth coverage. CI starts local Supabase, runs the database tests, and enables auth browser tests. Tests use a mobile Chromium viewport; they do not substitute for physical Android or weak-network testing.
 
+For the optional iPhone/WebKit critical-flow suite, install WebKit with `npx playwright install webkit`, then run `TEST_LOCAL_AUTH=1 npm run test:ios` after building. This emulates an iPhone viewport; it does not test a physical iPhone. See `docs/testing-report.md` for the latest full test evidence and remaining manual checks.
+
 Latest local result: 151 database assertions passed; app coverage is now 35 browser/adapter/validation cases. The combined run passed 34 cases, and the final focused admin suite passed all 3 cases after correcting asynchronous test cleanup. Lint, strict type checks, and the production build passed. Earlier verification also covered synthetic-source deletion and restore grants/RLS. `test:retention` requires the seeded local stack and server-only local settings; it refuses hosted URLs. AI tests use offline mocks rather than paid provider calls.
 
 For the temporary browser installation used in the initial session:
@@ -127,6 +129,10 @@ Set server-only `OPENAI_API_KEY` and an explicit `OPENAI_OFFER_MODEL` supporting
 Uploads are limited to 2 MB, validated by media signatures, and stored in private shop-scoped paths. Processing uses timeouts, database request budgets, and manual-entry fallback. Source text/media is hidden after 30 days; physical deletion requires the cleanup job. Actual provider quality, cost, and representative Telugu/Hindi/English samples are unverified. Never claim the offline adapter tests establish multilingual accuracy.
 
 ## Discovery, reporting, and analytics
+
+The top of `/nearby` now searches businesses on **Google Maps** by six-digit Indian PIN code or an explicitly requested current location, with grocery/bakery/salon/restaurant categories. Enter a PIN (for example, `500081`) and choose **Open Google Maps**. Results open in another tab/app; a fallback link is provided if popups are blocked. This uses [Google Maps URLs](https://developers.google.com/maps/documentation/urls/get-started), which need no API key. It does not embed/import Google listings or use the Places API. Google results depend on Google's location interpretation and listing coverage; the PIN is format-validated, not verified against a postal directory.
+
+No location permission is requested automatically. Search coordinates stay in component memory, and are sent to Google only when opening the search. Google businesses are separate from registered ShopMitra shops and their owner-approved offers, which remain in the section below. Tests mock Google navigation; they verify the destination URL and UI behavior, not actual Google listing relevance.
 
 Operators provision `shops.location` using longitude/latitude PostGIS points. Geolocation search requires coordinates; manual neighborhood discovery also works for shops without them. Location is requested explicitly and used for that search only.
 

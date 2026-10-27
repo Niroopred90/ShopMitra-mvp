@@ -6,6 +6,7 @@ import { BrandMark } from "@/components/brand-art";
 export const metadata: Metadata = {
   title: { default: "ShopMitra | Your neighborhood, connected", template: "%s | ShopMitra" },
   description: "A simple digital storefront for your neighborhood shop.",
+  ...(process.env.FEEDBACK_MODE === "true" ? { robots: { index: false, follow: false } } : {}),
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body>
         <a href="#main" className="skip-link">Skip to content</a>
+        {process.env.FEEDBACK_MODE === "true" && <div className="bg-emerald-900 px-5 py-2 text-center text-xs text-white">Feedback preview · Please use fictional shop details. Live AI is disabled.</div>}
         <header className="site-header">
           <div className="site-nav">
             <Link href="/" className="brand"><BrandMark className="brand-mark" /><span>ShopMitra<span className="brand-dot">.</span></span></Link>
@@ -24,7 +26,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </div>
         </header>
         <main id="main" className="site-main">{children}</main>
-        <footer className="site-footer"><div><Link href="/" className="footer-brand">ShopMitra.</Link><p>Small shops. Stronger neighborhoods.</p></div><p>Made for local · Hyderabad pilot<br /><span>Local development preview</span></p></footer>
+        <footer className="site-footer"><div><Link href="/" className="footer-brand">ShopMitra.</Link><p>Small shops. Stronger neighborhoods.</p></div><p>Made for local · Hyderabad pilot<br /><span>{process.env.FEEDBACK_MODE === "true" ? "Feedback preview" : "Local development preview"}</span></p></footer>
       </body>
     </html>
   );

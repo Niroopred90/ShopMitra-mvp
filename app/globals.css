@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root { color-scheme: light; --forest: #173f35; --muted: #6c7168; --paper: #faf8f2; --line: #e4e5da; }
+.google-search-panel { margin-top: 30px; padding: 28px; border: 1px solid #dce4d1; border-radius: 20px; background: #f0f3e9; }
 @theme { --color-emerald-900: #173f35; --color-emerald-800: #285b49; --color-emerald-50: #edf2e8; --color-orange-600: #bd653e; }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--paper); color: #283d34; font-family: "Avenir Next", "Segoe UI", Arial, sans-serif; -webkit-font-smoothing: antialiased; }

@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const config: NextConfig = {
+  // Only non-secret values: Next.js inlines these into the built artifact.
+  env: { FEEDBACK_MODE: process.env.FEEDBACK_MODE ?? "", SITE_URL: process.env.SITE_URL ?? "" },
   experimental: { serverActions: { bodySizeLimit: "4mb" } },
   async headers() {
     return [{ source: "/:path*", headers: [
